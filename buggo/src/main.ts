@@ -1,13 +1,10 @@
 import { dirname, importx } from "@discordx/importer";
-import { log } from "console";
 import type { Interaction, Message } from "discord.js";
 import { GatewayIntentBits } from "discord.js";
 import { Client } from "discordx";
-import dotenv from 'dotenv'
-dotenv.config()
+import 'dotenv/config';
+import { server } from "./server.ts";
 
-const TOKEN = process.env.TOKEN;
-log(TOKEN)
 const bot = new Client({
   intents: [
     GatewayIntentBits.GuildMembers,
@@ -33,13 +30,9 @@ bot.once("ready", () => {
   // Synchronize applications commands with Discord
   void bot.initApplicationCommands();
 
-  // To clear all guild commands, uncomment this line,
-  // This is useful when moving from guild commands to global commands
-  // It must only be executed once
-  //
-  //  await bot.clearApplicationCommands(
-  //    ...bot.guilds.cache.map((g) => g.id)
-  //  );
+  bot.clearApplicationCommands(
+      ...bot.guilds.cache.map((g) => g.id)
+    );
 
   console.log("Bot started");
 });
@@ -55,8 +48,7 @@ bot.on("messageCreate", (message: Message) => {
 async function run() {
 
   await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
-
-  
+  server
   if (!process.env.BOT_TOKEN) {
     throw Error("Could not find BOT_TOKEN in your environment");
   }
