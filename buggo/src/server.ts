@@ -9,3 +9,4 @@ export const server = new Elysia()
 export default {
   fetch: server.fetch
 };
+

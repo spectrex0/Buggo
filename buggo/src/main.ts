@@ -4,6 +4,7 @@ import { GatewayIntentBits } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config';
 import { server } from "./server.ts";
+import api from "./guggy_api/main.ts";
 
 const bot = new Client({
   intents: [
@@ -27,7 +28,6 @@ const bot = new Client({
 
 bot.once("ready", () => {
 
-  // Synchronize applications commands with Discord
   void bot.initApplicationCommands();
 
   bot.clearApplicationCommands(
@@ -46,7 +46,7 @@ bot.on("messageCreate", (message: Message) => {
 });
 
 async function run() {
-
+  // api
   await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
   server
   if (!process.env.BOT_TOKEN) {
