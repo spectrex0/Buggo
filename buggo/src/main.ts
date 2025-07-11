@@ -4,7 +4,7 @@ import { GatewayIntentBits } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config';
 import { server } from "./server.ts";
-import api from "./guggy_api/main.ts";
+import api from "./api/api.ts";
 
 const bot = new Client({
   intents: [
@@ -46,7 +46,7 @@ bot.on("messageCreate", (message: Message) => {
 });
 
 async function run() {
-  // api
+   api
   await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
   server
   if (!process.env.BOT_TOKEN) {
