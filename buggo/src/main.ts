@@ -3,9 +3,29 @@ import type { Interaction, Message } from "discord.js";
 import { GatewayIntentBits } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config';
-import { server } from "./server.ts";
-import api from "./api/api.ts";
+import api from "./api/api.ts";  
+import { fetch } from "undici";
 
+type LogLevel = 'log' | 'warn' | 'error';
+
+const logLevels: LogLevel[] = ['log', 'warn', 'error'];
+
+logLevels.forEach((level) => {
+  const original = console[level]; 
+  console[level] = (...args) => {
+    const message = args.map(a => 
+      typeof a === "object" ? JSON.stringify(a, null, 2) : a
+    ).join(" ");
+ 
+    fetch("http://localhost:4200/logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, level }),
+    }).catch(() => {}); 
+ 
+    original.apply(console, args);
+  };
+});
 const bot = new Client({
   intents: [
     GatewayIntentBits.GuildMembers,
@@ -48,7 +68,7 @@ bot.on("messageCreate", (message: Message) => {
 async function run() {
    api
   await importx(`${dirname(import.meta.url)}/{events,commands}/**/*.{ts,js}`);
-  server
+ 
   if (!process.env.BOT_TOKEN) {
     throw Error("Could not find BOT_TOKEN in your environment");
   }

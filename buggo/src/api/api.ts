@@ -24,7 +24,7 @@ api.use(
 
 api.use(routes)
 api.listen(4200, () => {
-  console.log("API corriendo en http://localhost:4200");
+  console.log("[API] RUNNING");
 });
 
 
